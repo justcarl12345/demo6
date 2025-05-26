@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane style="-fx-background-color: linear-gradient(to bottom right, #87ceca, #4682b4);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo6.SplashController">
+    <VBox alignment="CENTER" spacing="20">
+        <Label style="-fx-font-size: 28px; -fx-text-fill: white;" text="Personal Expenses Tracker" />
+        <ProgressBar fx:id="progressBar" prefWidth="300" />
+        <Label style="-fx-text-fill: white;" text="Loading..." />
+    </VBox>
+</StackPane>

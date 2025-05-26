@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            fx:controller="com.example.demo6.LoginController"
+            prefWidth="450" prefHeight="500"
+            style="-fx-background-color: linear-gradient(to bottom right, #74ebd5, #9face6); -fx-padding: 20;">
+
+    <VBox alignment="CENTER" spacing="15" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="20">
+        <!-- Title -->
+        <Label text="Personal Expenses Tracker"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+
+        <!-- Search Box -->
+        <TextField fx:id="searchField" promptText="Search accounts..."
+                   prefWidth="300"
+                   style="-fx-background-radius: 8; -fx-padding: 8; -fx-background-color: white;"/>
+
+        <!-- Account List -->
+        <ListView fx:id="accountListView" prefHeight="150" prefWidth="300"
+                  style="-fx-background-radius: 8; -fx-background-color: white;"/>
+
+        <!-- Username -->
+        <TextField fx:id="usernameField" promptText="Username"
+                   prefWidth="300"
+                   style="-fx-background-radius: 8; -fx-padding: 8; -fx-background-color: white;" />
+
+        <!-- Password -->
+        <PasswordField fx:id="passwordField" promptText="Password"
+                       prefWidth="300"
+                       style="-fx-background-radius: 8; -fx-padding: 8; -fx-background-color: white;" />
+
+        <!-- Buttons -->
+        <HBox spacing="12" alignment="CENTER">
+            <Button fx:id="loginButton" text="Log In" onAction="#onLogin"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
+            <Button fx:id="signupButton" text="Sign Up" onAction="#onSignup"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
+            <Button fx:id="deleteButton" text="Delete" onAction="#onDeleteAccount"
+                    style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16;" />
+        </HBox>
+
+        <!-- Status Message -->
+        <Label fx:id="statusLabel"
+               text=""
+               style="-fx-text-fill: red; -fx-font-size: 12px;" />
+    </VBox>
+</AnchorPane>

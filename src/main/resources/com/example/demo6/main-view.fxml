@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane style="-fx-background-color: Black;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo6.HelloController">
+    <!-- Top: Dark Mode Toggle + User Info -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f0f0f0; -fx-padding: 10;">
+            <children>
+                <ToggleButton fx:id="darkModeToggle" onAction="#toggleDarkMode" style="-fx-background-radius: 5; -fx-padding: 5 10;" text="Dark Mode" />
+                <Label text="Welcome, " />
+                <Label style="-fx-font-weight: bold;" text="${controller.currentUser}" />
+                <Button onAction="#handleLogout" style="-fx-background-color: #ff4444; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 5 15;" text="Logout" />
+            </children>
+        </HBox>
+    </top>
+
+    <!-- Center: Input + Chart -->
+    <center>
+        <HBox spacing="0" style="-fx-background-color: Black;">
+            <!-- Left: Input Form -->
+            <VBox prefWidth="300" spacing="10.0" style="-fx-background-color: skyblue;" HBox.hgrow="NEVER">
+                <children>
+                    <Label text="Description" />
+                    <TextField fx:id="descriptionField" promptText="Enter description" />
+
+                    <Label text="Amount" />
+                    <TextField fx:id="amountField" promptText="Enter amount" />
+
+                    <HBox spacing="10">
+                        <children>
+                            <Button fx:id="addIncomeButton" onAction="#handleAddIncome" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Add Income" />
+                            <Button fx:id="addExpenseButton" onAction="#handleAddExpense" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Add Expense" />
+                        </children>
+                    </HBox>
+
+                    <Button fx:id="deleteButton" disable="true" onAction="#handleDeleteTransaction" style="-fx-background-color: #ff4444; -fx-text-fill: white;" text="Delete Selected" />
+
+                    <Label fx:id="balanceLabel" style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Current Balance: ₱0.00" />
+                </children>
+                <padding>
+                    <Insets bottom="20" left="20" right="20" top="20" />
+                </padding>
+            </VBox>
+
+            <!-- Right: Line Chart -->
+            <VBox style="-fx-background-color: pink;" HBox.hgrow="ALWAYS">
+                <children>
+                    <Label style="-fx-text-fill: black;" text="Transaction Overview" />
+                    <LineChart fx:id="transactionChart" style="-fx-background-color: PINK;" title="Monthly Income vs Expenses">
+                        <xAxis>
+                            <CategoryAxis fx:id="monthAxis" label="Month" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="moneyAxis" label="Amount" />
+                        </yAxis>
+                    </LineChart>
+                </children>
+                <padding>
+                    <Insets bottom="20" left="20" right="20" top="20" />
+                </padding>
+            </VBox>
+        </HBox>
+    </center>
+
+    <!-- Bottom: All tables in a single row -->
+    <bottom>
+        <HBox spacing="10" style="-fx-background-color: #f5f5f5; -fx-padding: 10;">
+            <!-- Transaction Table -->
+            <TableView fx:id="transactionTable" prefWidth="400" prefHeight="250" style="-fx-background-color: #7cf7ed;" HBox.hgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="dateColumn" text="Date" />
+                    <TableColumn fx:id="descriptionColumn" text="Description" />
+                    <TableColumn fx:id="amountColumn" text="Amount" />
+                    <TableColumn fx:id="typeColumn" text="Type" />
+                </columns>
+            </TableView>
+
+            <!-- Quick Overview Panel (Now in the middle) -->
+            <VBox spacing="10" style="-fx-background-color: #e8f4f8; -fx-padding: 10; -fx-min-width: 250;">
+                <!-- Budget Progress -->
+                <VBox spacing="5" fx:id="budgetBox">
+                    <Label text="Budget Progress" style="-fx-font-weight: bold;"/>
+                    <ProgressBar fx:id="budgetProgressBar" progress="0" prefWidth="200"/>
+                    <HBox spacing="5">
+                        <Label fx:id="budgetSpentLabel" text="₱0" style="-fx-font-size: 12;"/>
+                        <Label text="/"/>
+                        <Label fx:id="budgetTotalLabel" text="₱0" style="-fx-font-size: 12;"/>
+                        <Label fx:id="budgetPercentLabel" text="(0%)" style="-fx-font-size: 12;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Quick Stats -->
+                <VBox spacing="5" fx:id="statsBox">
+                    <Label text="This Month" style="-fx-font-weight: bold;"/>
+                    <HBox spacing="5">
+                        <Label text="Income:"/>
+                        <Label fx:id="monthIncomeLabel" text="₱0" style="-fx-text-fill: #4CAF50; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <HBox spacing="5">
+                        <Label text="Expenses:"/>
+                        <Label fx:id="monthExpenseLabel" text="₱0" style="-fx-text-fill: #f44336; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <HBox spacing="5">
+                        <Label text="Savings:"/>
+                        <Label fx:id="monthSavingsLabel" text="₱0" style="-fx-text-fill: #2196F3; -fx-font-weight: bold;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Recent Transactions -->
+                <VBox spacing="5" fx:id="recentTransactionsBox">
+                    <Label text="Recent Transactions" style="-fx-font-weight: bold;"/>
+                    <ListView fx:id="recentTransactionsList" prefHeight="100" prefWidth="230">
+                        <placeholder>
+                            <Label text="No recent transactions"/>
+                        </placeholder>
+                    </ListView>
+                </VBox>
+            </VBox>
+
+            <!-- Summary Table -->
+            <TableView fx:id="summaryTable" prefWidth="300" prefHeight="250" style="-fx-background-color: #94f2ea;" HBox.hgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="summaryMonthColumn" prefWidth="100" text="Month" />
+                    <TableColumn fx:id="summaryIncomeColumn" prefWidth="100" text="Income (₱)" />
+                    <TableColumn fx:id="summaryExpenseColumn" prefWidth="100" text="Expense (₱)" />
+                </columns>
+            </TableView>
+        </HBox>
+    </bottom>
+</BorderPane>
