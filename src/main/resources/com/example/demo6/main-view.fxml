@@ -70,59 +70,60 @@
     <bottom>
         <HBox spacing="10" style="-fx-background-color: #f5f5f5; -fx-padding: 10;">
             <!-- Transaction Table -->
-            <TableView fx:id="transactionTable" prefWidth="400" prefHeight="250" style="-fx-background-color: #7cf7ed;" HBox.hgrow="ALWAYS">
+            <TableView fx:id="transactionTable" prefHeight="250" prefWidth="400" style="-fx-background-color: #7cf7ed;" HBox.hgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="dateColumn" text="Date" />
                     <TableColumn fx:id="descriptionColumn" text="Description" />
                     <TableColumn fx:id="amountColumn" text="Amount" />
-                    <TableColumn fx:id="typeColumn" text="Type" />
+                    <TableColumn fx:id="timeColumn" text="Time" />
+                    <TableColumn fx:id="typeColumn" prefWidth="75.0" text="Type" />
                 </columns>
             </TableView>
 
-            <!-- Quick Overview Panel (Now in the middle) -->
+            <!-- Quick Overview Panel -->
             <VBox spacing="10" style="-fx-background-color: #e8f4f8; -fx-padding: 10; -fx-min-width: 250;">
                 <!-- Budget Progress -->
-                <VBox spacing="5" fx:id="budgetBox">
-                    <Label text="Budget Progress" style="-fx-font-weight: bold;"/>
-                    <ProgressBar fx:id="budgetProgressBar" progress="0" prefWidth="200"/>
+                <VBox fx:id="budgetBox" spacing="5">
+                    <Label style="-fx-font-weight: bold;" text="Budget Progress" />
+                    <ProgressBar fx:id="budgetProgressBar" prefWidth="200" progress="0" />
                     <HBox spacing="5">
-                        <Label fx:id="budgetSpentLabel" text="₱0" style="-fx-font-size: 12;"/>
-                        <Label text="/"/>
-                        <Label fx:id="budgetTotalLabel" text="₱0" style="-fx-font-size: 12;"/>
-                        <Label fx:id="budgetPercentLabel" text="(0%)" style="-fx-font-size: 12;"/>
+                        <Label fx:id="budgetSpentLabel" style="-fx-font-size: 12;" text="₱0" />
+                        <Label text="/" />
+                        <Label fx:id="budgetTotalLabel" style="-fx-font-size: 12;" text="₱0" />
+                        <Label fx:id="budgetPercentLabel" style="-fx-font-size: 12;" text="(0%)" />
                     </HBox>
                 </VBox>
 
                 <!-- Quick Stats -->
-                <VBox spacing="5" fx:id="statsBox">
-                    <Label text="This Month" style="-fx-font-weight: bold;"/>
+                <VBox fx:id="statsBox" spacing="5">
+                    <Label style="-fx-font-weight: bold;" text="This Month" />
                     <HBox spacing="5">
-                        <Label text="Income:"/>
-                        <Label fx:id="monthIncomeLabel" text="₱0" style="-fx-text-fill: #4CAF50; -fx-font-weight: bold;"/>
+                        <Label text="Income:" />
+                        <Label fx:id="monthIncomeLabel" style="-fx-text-fill: #4CAF50; -fx-font-weight: bold;" text="₱0" />
                     </HBox>
                     <HBox spacing="5">
-                        <Label text="Expenses:"/>
-                        <Label fx:id="monthExpenseLabel" text="₱0" style="-fx-text-fill: #f44336; -fx-font-weight: bold;"/>
+                        <Label text="Expenses:" />
+                        <Label fx:id="monthExpenseLabel" style="-fx-text-fill: #f44336; -fx-font-weight: bold;" text="₱0" />
                     </HBox>
                     <HBox spacing="5">
-                        <Label text="Savings:"/>
-                        <Label fx:id="monthSavingsLabel" text="₱0" style="-fx-text-fill: #2196F3; -fx-font-weight: bold;"/>
+                        <Label text="Savings:" />
+                        <Label fx:id="monthSavingsLabel" style="-fx-text-fill: #2196F3; -fx-font-weight: bold;" text="₱0" />
                     </HBox>
                 </VBox>
 
                 <!-- Recent Transactions -->
-                <VBox spacing="5" fx:id="recentTransactionsBox">
-                    <Label text="Recent Transactions" style="-fx-font-weight: bold;"/>
+                <VBox fx:id="recentTransactionsBox" spacing="5">
+                    <Label style="-fx-font-weight: bold;" text="Recent Transactions" />
                     <ListView fx:id="recentTransactionsList" prefHeight="100" prefWidth="230">
                         <placeholder>
-                            <Label text="No recent transactions"/>
+                            <Label text="No recent transactions" />
                         </placeholder>
                     </ListView>
                 </VBox>
             </VBox>
 
             <!-- Summary Table -->
-            <TableView fx:id="summaryTable" prefWidth="300" prefHeight="250" style="-fx-background-color: #94f2ea;" HBox.hgrow="ALWAYS">
+            <TableView fx:id="summaryTable" prefHeight="250" prefWidth="300" style="-fx-background-color: #94f2ea;" HBox.hgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="summaryMonthColumn" prefWidth="100" text="Month" />
                     <TableColumn fx:id="summaryIncomeColumn" prefWidth="100" text="Income (₱)" />

@@ -20,37 +20,36 @@ public class SceneManager {
     }
 
     public static void switchTo(String fxmlFileName) {
-        switchTo(fxmlFileName, 800, 600);
+        switchTo(fxmlFileName, primaryStage.getWidth(), primaryStage.getHeight());
     }
 
-    public static void switchTo(String fxmlFileName, int width, int height) {
+    public static void switchTo(String fxmlFileName, double width, double height) {
         if (primaryStage != null) {
-            switchScene(primaryStage, fxmlFileName, width, height);
-        }
-    }
+            boolean wasFullScreen = primaryStage.isFullScreen();
 
-    public static void switchScene(Stage stage, String fxmlFileName, int width, int height) {
-        if (!fxmlFileName.endsWith(".fxml")) {
-            fxmlFileName += ".fxml";
-        }
+            try {
+                String fxmlPath = "/com/example/demo6/" +
+                        (fxmlFileName.endsWith(".fxml") ? fxmlFileName : fxmlFileName + ".fxml");
+                URL fxmlUrl = SceneManager.class.getResource(fxmlPath);
 
-        String fxmlPath = "/com/example/demo6/" + fxmlFileName;
-        URL fxmlUrl = SceneManager.class.getResource(fxmlPath);
+                if (fxmlUrl == null) {
+                    System.err.println("FXML file not found: " + fxmlPath);
+                    return;
+                }
 
-        if (fxmlUrl == null) {
-            System.err.println("FXML file not found: " + fxmlPath);
-            return;
-        }
+                currentLoader = new FXMLLoader(fxmlUrl);
+                Parent root = currentLoader.load();
+                Scene scene = new Scene(root, width, height);
+                primaryStage.setScene(scene);
 
-        try {
-            currentLoader = new FXMLLoader(fxmlUrl);
-            Parent root = currentLoader.load();
-            Scene scene = new Scene(root, width, height);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            System.err.println("Failed to load FXML: " + fxmlFileName);
-            e.printStackTrace();
+                if (wasFullScreen) {
+                    primaryStage.setFullScreen(true);
+                }
+
+            } catch (IOException e) {
+                System.err.println("Failed to load FXML: " + fxmlFileName);
+                e.printStackTrace();
+            }
         }
     }
 }

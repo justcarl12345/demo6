@@ -118,7 +118,9 @@ public class LoginController {
             showSuccess("Welcome, " + username + "!");
             UserSession.setLoggedInUser(username);
             clearFields();
-            SceneManager.switchTo("main-view");
+
+            // Switch to main view while preserving fullscreen
+            SceneManager.switchTo("main-view.fxml");
         } else {
             showError("Invalid username or password.");
         }

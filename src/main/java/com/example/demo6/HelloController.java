@@ -22,44 +22,77 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HelloController {
-    @FXML private TextField descriptionField;
-    @FXML private TextField amountField;
-    @FXML private Button addIncomeButton;
-    @FXML private Button addExpenseButton;
-    @FXML private Button deleteButton;
-    @FXML private Label userLabel;
-    @FXML private Label balanceLabel;
-    @FXML private ToggleButton darkModeToggle;
-    @FXML private LineChart<String, Number> transactionChart;
-    @FXML private CategoryAxis monthAxis;
-    @FXML private NumberAxis moneyAxis;
-    @FXML private TableView<Transaction> transactionTable;
-    @FXML private TableColumn<Transaction, String> dateColumn;
-    @FXML private TableColumn<Transaction, String> descriptionColumn;
-    @FXML private TableColumn<Transaction, Double> amountColumn;
-    @FXML private TableColumn<Transaction, String> typeColumn;
-    @FXML private TableView<Summary> summaryTable;
-    @FXML private TableColumn<Summary, String> summaryMonthColumn;
-    @FXML private TableColumn<Summary, Double> summaryIncomeColumn;
-    @FXML private TableColumn<Summary, Double> summaryExpenseColumn;
-    @FXML private ProgressBar budgetProgressBar;
-    @FXML private Label budgetSpentLabel;
-    @FXML private Label budgetTotalLabel;
-    @FXML private Label budgetPercentLabel;
-    @FXML private Label monthIncomeLabel;
-    @FXML private Label monthExpenseLabel;
-    @FXML private Label monthSavingsLabel;
-    @FXML private ListView<String> recentTransactionsList;
-    @FXML private VBox budgetBox;
-    @FXML private VBox statsBox;
-    @FXML private VBox recentTransactionsBox;
+    @FXML
+    private TextField descriptionField;
+    @FXML
+    private TextField amountField;
+    @FXML
+    private Button addIncomeButton;
+    @FXML
+    private Button addExpenseButton;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private Label userLabel;
+    @FXML
+    private Label balanceLabel;
+    @FXML
+    private ToggleButton darkModeToggle;
+    @FXML
+    private LineChart<String, Number> transactionChart;
+    @FXML
+    private CategoryAxis monthAxis;
+    @FXML
+    private NumberAxis moneyAxis;
+    @FXML
+    private TableView<Transaction> transactionTable;
+    @FXML
+    private TableColumn<Transaction, String> dateColumn;
+    @FXML
+    private TableColumn<Transaction, String> descriptionColumn;
+    @FXML
+    private TableColumn<Transaction, Double> amountColumn;
+    @FXML
+    private TableColumn<Transaction, String> timeColumn;
+    @FXML
+    private TableColumn<Transaction, String> typeColumn;
+    @FXML
+    private TableView<Summary> summaryTable;
+    @FXML
+    private TableColumn<Summary, String> summaryMonthColumn;
+    @FXML
+    private TableColumn<Summary, Double> summaryIncomeColumn;
+    @FXML
+    private TableColumn<Summary, Double> summaryExpenseColumn;
+    @FXML
+    private ProgressBar budgetProgressBar;
+    @FXML
+    private Label budgetSpentLabel;
+    @FXML
+    private Label budgetTotalLabel;
+    @FXML
+    private Label budgetPercentLabel;
+    @FXML
+    private Label monthIncomeLabel;
+    @FXML
+    private Label monthExpenseLabel;
+    @FXML
+    private Label monthSavingsLabel;
+    @FXML
+    private ListView<String> recentTransactionsList;
+    @FXML
+    private VBox budgetBox;
+    @FXML
+    private VBox statsBox;
+    @FXML
+    private VBox recentTransactionsBox;
 
     private ObservableList<Transaction> transactions = FXCollections.observableArrayList();
     private ObservableList<Summary> summaries = FXCollections.observableArrayList();
     private double balance = 0.0;
     private final StringProperty currentUser = new SimpleStringProperty();
     private boolean darkMode = false;
-    private double monthlyBudget = 10000.0;
+    private double monthlyBudget = 2500.0;
 
     @FXML
     public void initialize() {
@@ -158,6 +191,7 @@ public class HelloController {
         dateColumn.setCellValueFactory(cellData -> cellData.getValue().formattedDateProperty());
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
         amountColumn.setCellValueFactory(cellData -> cellData.getValue().amountProperty().asObject());
+        timeColumn.setCellValueFactory(cellData -> cellData.getValue().formattedTimeProperty());
         typeColumn.setCellValueFactory(cellData -> {
             double amount = cellData.getValue().getAmount();
             return new SimpleStringProperty(amount >= 0 ? "Income" : "Expense");

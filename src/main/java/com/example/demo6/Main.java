@@ -7,8 +7,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Main extends Application {
+    private static Stage primaryStage;
+
     @Override
     public void start(Stage stage) throws IOException {
+        primaryStage = stage;
         SceneManager.setStage(stage);
 
         stage.setOnCloseRequest(e -> {
@@ -25,6 +28,10 @@ public class Main extends Application {
         stage.setTitle("Personal Expenses Tracker");
         stage.setScene(scene);
         stage.show();
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     public static void main(String[] args) {

@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 
 public class SplashController {
-
     @FXML
     private ProgressBar progressBar;
 
@@ -13,9 +12,8 @@ public class SplashController {
     public void initialize() {
         new Thread(() -> {
             try {
-                Thread.sleep(3000); // splash duration
+                Thread.sleep(3000);
                 Platform.runLater(() -> {
-                    // ⬇️ Ensure it switches to login-view, not main-view
                     SceneManager.switchTo("login.fxml");
                 });
             } catch (InterruptedException e) {
