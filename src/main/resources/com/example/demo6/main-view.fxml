@@ -4,6 +4,7 @@
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
 <BorderPane style="-fx-background-color: Black;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo6.HelloController">
     <!-- Top: Dark Mode Toggle + User Info -->
@@ -46,18 +47,26 @@
                 </padding>
             </VBox>
 
-            <!-- Right: Line Chart -->
+            <!-- Right: Bar Chart + Custom Legend -->
             <VBox style="-fx-background-color: pink;" HBox.hgrow="ALWAYS">
                 <children>
                     <Label style="-fx-text-fill: black;" text="Transaction Overview" />
-                    <LineChart fx:id="transactionChart" style="-fx-background-color: PINK;" title="Monthly Income vs Expenses">
-                        <xAxis>
-                            <CategoryAxis fx:id="monthAxis" label="Month" />
-                        </xAxis>
-                        <yAxis>
-                            <NumberAxis fx:id="moneyAxis" label="Amount" />
-                        </yAxis>
-                    </LineChart>
+                    <VBox spacing="10">
+                        <BarChart fx:id="transactionChart" prefHeight="247.0" prefWidth="650.0">
+                            <xAxis>
+                                <CategoryAxis fx:id="monthAxis" label="Month" />
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis fx:id="moneyAxis" label="Amount (₱)" />
+                            </yAxis>
+                        </BarChart>
+                        <HBox fx:id="chartLegend" alignment="CENTER" spacing="10">
+                            <Circle fx:id="incomeCircle" radius="8" style="-fx-fill: #4CAF50;" />
+                            <Label fx:id="incomeLabel" style="-fx-text-fill: black;" text="Income" />
+                            <Circle fx:id="expenseCircle" radius="8" style="-fx-fill: #f44336;" />
+                            <Label fx:id="expenseLabel" style="-fx-text-fill: black;" text="Expense" />
+                        </HBox>
+                    </VBox>
                 </children>
                 <padding>
                     <Insets bottom="20" left="20" right="20" top="20" />
@@ -125,9 +134,10 @@
             <!-- Summary Table -->
             <TableView fx:id="summaryTable" prefHeight="250" prefWidth="300" style="-fx-background-color: #94f2ea;" HBox.hgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="summaryMonthColumn" prefWidth="100" text="Month" />
-                    <TableColumn fx:id="summaryIncomeColumn" prefWidth="100" text="Income (₱)" />
-                    <TableColumn fx:id="summaryExpenseColumn" prefWidth="100" text="Expense (₱)" />
+                    <TableColumn fx:id="summaryMonthColumn" text="Month" />
+                    <TableColumn fx:id="summaryIncomeColumn" text="Income (₱)" />
+                    <TableColumn fx:id="summaryExpenseColumn" text="Expense (₱)" />
+                    <TableColumn fx:id="summaryBalanceColumn" text="Balance (₱)" />
                 </columns>
             </TableView>
         </HBox>

@@ -63,11 +63,13 @@ class Summary {
     private final StringProperty month;
     private final DoubleProperty income;
     private final DoubleProperty expense;
+    private final DoubleProperty balance; // New: Balance property
 
     public Summary(String month, double income, double expense) {
         this.month = new SimpleStringProperty(month);
         this.income = new SimpleDoubleProperty(income);
         this.expense = new SimpleDoubleProperty(expense);
+        this.balance = new SimpleDoubleProperty(income - expense); // Calculate balance
     }
 
     public StringProperty monthProperty() {
@@ -82,15 +84,7 @@ class Summary {
         return expense;
     }
 
-    public String getMonth() {
-        return month.get();
-    }
-
-    public double getIncome() {
-        return income.get();
-    }
-
-    public double getExpense() {
-        return expense.get();
+    public DoubleProperty balanceProperty() { // New: Getter for balance
+        return balance;
     }
 }

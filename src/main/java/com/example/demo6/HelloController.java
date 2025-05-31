@@ -1,5 +1,7 @@
 package com.example.demo6;
 
+import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -8,12 +10,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -39,7 +42,7 @@ public class HelloController {
     @FXML
     private ToggleButton darkModeToggle;
     @FXML
-    private LineChart<String, Number> transactionChart;
+    private BarChart<String, Number> transactionChart;
     @FXML
     private CategoryAxis monthAxis;
     @FXML
@@ -65,6 +68,8 @@ public class HelloController {
     @FXML
     private TableColumn<Summary, Double> summaryExpenseColumn;
     @FXML
+    private TableColumn<Summary, Double> summaryBalanceColumn;
+    @FXML
     private ProgressBar budgetProgressBar;
     @FXML
     private Label budgetSpentLabel;
@@ -86,6 +91,14 @@ public class HelloController {
     private VBox statsBox;
     @FXML
     private VBox recentTransactionsBox;
+    @FXML
+    private Circle incomeCircle;
+    @FXML
+    private Label incomeLabel;
+    @FXML
+    private Circle expenseCircle;
+    @FXML
+    private Label expenseLabel;
 
     private ObservableList<Transaction> transactions = FXCollections.observableArrayList();
     private ObservableList<Summary> summaries = FXCollections.observableArrayList();
@@ -124,6 +137,8 @@ public class HelloController {
             darkMode = newVal;
             applyDarkMode();
         });
+
+        Platform.runLater(this::applyChartColors);
     }
 
     private void setupDashboard() {
@@ -190,7 +205,7 @@ public class HelloController {
     private void setupTransactionTable() {
         dateColumn.setCellValueFactory(cellData -> cellData.getValue().formattedDateProperty());
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
-        amountColumn.setCellValueFactory(cellData -> cellData.getValue().amountProperty().asObject());
+        amountColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(Math.abs(cellData.getValue().getAmount())));
         timeColumn.setCellValueFactory(cellData -> cellData.getValue().formattedTimeProperty());
         typeColumn.setCellValueFactory(cellData -> {
             double amount = cellData.getValue().getAmount();
@@ -203,6 +218,8 @@ public class HelloController {
         summaryMonthColumn.setCellValueFactory(cellData -> cellData.getValue().monthProperty());
         summaryIncomeColumn.setCellValueFactory(cellData -> cellData.getValue().incomeProperty().asObject());
         summaryExpenseColumn.setCellValueFactory(cellData -> cellData.getValue().expenseProperty().asObject());
+        summaryBalanceColumn.setCellValueFactory(cellData -> cellData.getValue().balanceProperty().asObject());
+        summaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         summaryTable.setItems(summaries);
         updateSummaryTable();
     }
@@ -233,6 +250,9 @@ public class HelloController {
         transactionChart.setTitle("Monthly Income vs Expenses");
         monthAxis.setLabel("Month");
         moneyAxis.setLabel("Amount (₱)");
+        transactionChart.setBarGap(5);
+        transactionChart.setCategoryGap(20);
+        transactionChart.setLegendVisible(false);
         updateChart();
     }
 
@@ -253,7 +273,7 @@ public class HelloController {
         XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
         incomeSeries.setName("Income");
         XYChart.Series<String, Number> expenseSeries = new XYChart.Series<>();
-        expenseSeries.setName("Expenses");
+        expenseSeries.setName("Expense");
         for (Month month : Month.values()) {
             String monthName = month.toString();
             Double[] values = monthlyData.getOrDefault(month, new Double[]{0.0, 0.0});
@@ -261,6 +281,35 @@ public class HelloController {
             expenseSeries.getData().add(new XYChart.Data<>(monthName, values[1]));
         }
         transactionChart.getData().addAll(incomeSeries, expenseSeries);
+        transactionChart.getData().get(0).getData().forEach(data -> {
+            Node bar = data.getNode();
+            if (bar != null) {
+                bar.setStyle("-fx-bar-fill: #4CAF50; -fx-opacity: 0.9;");
+            }
+        });
+        transactionChart.getData().get(1).getData().forEach(data -> {
+            Node bar = data.getNode();
+            if (bar != null) {
+                bar.setStyle("-fx-bar-fill: #f44336; -fx-opacity: 0.7;");
+            }
+        });
+    }
+
+    private void applyChartColors() {
+        if (transactionChart.getData().size() >= 2) {
+            transactionChart.getData().get(0).getData().forEach(data -> {
+                Node bar = data.getNode();
+                if (bar != null) {
+                    bar.setStyle("-fx-bar-fill: #4CAF50; -fx-opacity: 0.9;");
+                }
+            });
+            transactionChart.getData().get(1).getData().forEach(data -> {
+                Node bar = data.getNode();
+                if (bar != null) {
+                    bar.setStyle("-fx-bar-fill: #f44336; -fx-opacity: 0.7;");
+                }
+            });
+        }
     }
 
     private void calculateBalance() {
@@ -301,18 +350,20 @@ public class HelloController {
         String amountText = amountField.getText().trim();
 
         if (description.isEmpty() || amountText.isEmpty()) {
-            showAlert("Error", "Please fill all fields");
+            showAlert("Error", "Please fill out all fields.");
             return;
         }
 
         try {
             double amount = Double.parseDouble(amountText);
             if (amount <= 0) {
-                showAlert("Error", "Amount must be positive");
+                showAlert("Error", "Amount must be positive.");
                 return;
             }
 
-            if (!isIncome) amount = -amount;
+            if (!isIncome) {
+                amount = -amount;
+            }
 
             Transaction transaction = new Transaction(description, amount, LocalDateTime.now());
             transactions.add(transaction);
@@ -330,8 +381,9 @@ public class HelloController {
             if (darkMode) {
                 applyDarkMode();
             }
+            Platform.runLater(this::applyChartColors);
         } catch (NumberFormatException e) {
-            showAlert("Error", "Invalid amount format");
+            showAlert("Error", "Invalid amount format.");
         }
     }
 
@@ -373,18 +425,24 @@ public class HelloController {
             transactionChart.getXAxis().setStyle("-fx-tick-label-fill: white;");
             transactionChart.getYAxis().setStyle("-fx-tick-label-fill: white;");
             transactionChart.lookup(".chart-title").setStyle("-fx-text-fill: white;");
-            transactionChart.lookup(".chart-legend").setStyle("-fx-text-fill: white;");
 
-            descriptionField.setStyle("-fx-background-color: #3d3d3d; -fx-text-fill: white;");
-            amountField.setStyle("-fx-background-color: #3d3d3d; -fx-text-fill: white;");
+            descriptionField.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
+            amountField.setStyle("-fx-background-color: #333333; -fx-text-fill: white;");
             darkModeToggle.setText("Light Mode");
 
-            String darkPanelStyle = "-fx-background-color: #2d2d2d; -fx-text-fill: white;";
+            String darkPanelStyle = "-fx-background-color: #333333; -fx-text-fill: white;";
             budgetBox.setStyle(darkPanelStyle);
             statsBox.setStyle(darkPanelStyle);
             recentTransactionsBox.setStyle(darkPanelStyle);
-            recentTransactionsList.setStyle("-fx-control-inner-background: #2d2d2d; -fx-text-fill: white;");
+            recentTransactionsList.setStyle("-fx-control-inner-background: #333333; -fx-text-fill: white;");
             budgetProgressBar.setStyle("-fx-accent: #4CAF50;");
+
+            if (incomeLabel != null) {
+                incomeLabel.setStyle("-fx-text-fill: white;");
+            }
+            if (expenseLabel != null) {
+                expenseLabel.setStyle("-fx-text-fill: white;");
+            }
 
             styleAllLabels(true);
         } else {
@@ -396,6 +454,7 @@ public class HelloController {
             moneyAxis.setStyle("");
             transactionChart.getXAxis().setStyle("");
             transactionChart.getYAxis().setStyle("");
+            transactionChart.lookup(".chart-title").setStyle("");
 
             descriptionField.setStyle("");
             amountField.setStyle("");
@@ -407,8 +466,16 @@ public class HelloController {
             recentTransactionsList.setStyle("");
             budgetProgressBar.setStyle("");
 
+            if (incomeLabel != null) {
+                incomeLabel.setStyle("-fx-text-fill: black;");
+            }
+            if (expenseLabel != null) {
+                expenseLabel.setStyle("-fx-text-fill: black;");
+            }
+
             styleAllLabels(false);
         }
+        Platform.runLater(this::applyChartColors);
     }
 
     private void styleAllTableText(TableView<?> table, boolean darkMode) {
